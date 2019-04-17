@@ -8,9 +8,9 @@
 #include<cmath>
 using namespace std;
 using namespace cv;
-//this class is just to make a comparation between the hough lines extract and the function above 
-//in this case the input is still the threshold image processed by Hull and through the hough the output are 
-//four longest lines detected by hough
+//这个class只是为了测试一下用hough直线检测来找四条边的效果，
+//输入仍然是经过凸包的四边形二值图，输出为经过hough直线检测后得到的四条最长的直线
+
 
 class hough_lines_comparation
 {

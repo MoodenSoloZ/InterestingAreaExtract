@@ -7,13 +7,13 @@ double hough_lines_comparation::line_length(Vec4f line)
 
 void hough_lines_comparation::get_hough_lines(Mat canny, Mat true_img,string loc)
 {
-	vector<Vec4f> lines;//a set to store the lines dete
+	vector<Vec4f> lines;//存放hough直线检测得到的直线
 	vector < Vec4f> four_output_lines;
 	HoughLinesP(canny, lines, 1, CV_PI / 180, 150, 50, 50);
 	//HoughLines(canny, lines, 1, CV_PI / 180, 150, 0, 0);
 	double length = 0;
 	cout << lines.size() << endl;
-	for (int num1 = 1; num1 <= 4; num1++)//sort the lines by their length 
+	for (int num1 = 1; num1 <= 4; num1++)//根据直线的长度进行排序
 	{
 
 		for (int num2 = 0; num2 < lines.size() - num1; num2++)
@@ -29,13 +29,13 @@ void hough_lines_comparation::get_hough_lines(Mat canny, Mat true_img,string loc
 
 		}
 	}
-	//push th four longest lines in set of lines to four_output_lines
+	//从lines中选择四条最长的线段保存到four_output_lines中
 	four_output_lines.push_back(lines[lines.size() - 1]);
 	four_output_lines.push_back(lines[lines.size() - 2]);
 	four_output_lines.push_back(lines[lines.size() - 3]);
 	four_output_lines.push_back(lines[lines.size() - 4]);
 
-	for (size_t i = 0; i < 4; i++)//draw the four longest lines detected by hough in the img
+	for (size_t i = 0; i < 4; i++)//画出四条线段
 	{
 		Vec4i l = lines[i];
 		cout << line_length(lines[i]) << endl;

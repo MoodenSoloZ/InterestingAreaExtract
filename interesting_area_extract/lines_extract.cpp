@@ -17,7 +17,7 @@ int lines_extract::get_width_down(Mat img,int gap)
 
 		width_down++;
 		//cout << int(img.at<uchar>(row, 0.5*img.cols));
-		if (int(img.at<uchar>(row, 0.5*img.cols + gap))>50) break;//loop until finding the edge
+		if (int(img.at<uchar>(row, 0.5*img.cols + gap))>50) break;//直到找到四边形的边界为止
 
 	}
 
@@ -69,11 +69,11 @@ int lines_extract::get_length_left(Mat img,int gap)
 	return length_left;
 }
 
-Vec4f lines_extract::get_line_left(Mat img)//return th papa of the left line 
+Vec4f lines_extract::get_line_left(Mat img)
 {
 	Vec4f line_para;
 	vector<Point> points;
-	for (int gap = 0; gap < GAP; gap++)
+	for (int gap = 0; gap < GAP; gap++)//向外侧延伸GAP个点
 	{
 		int length_left = get_length_left(img,gap);
 		int pointx = 0.5*img.cols + gap - length_left;

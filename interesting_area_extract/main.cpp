@@ -9,24 +9,24 @@ int main(int argc, char**argv)
 {
 
 	vector<String> files;
-	glob(Resouce_Img_Read_FileLocation"/*.JPG", files, false);//push image content from Resouce_Img_Read_FileLocation to the vrctor files
+	glob(Resouce_Img_Read_FileLocation"/*.JPG", files, false);//将Resouce_Img_Read_FileLocation中的图片文件地址都加载到files中
 	int files_size = files.size();
 	//cout << files_size << endl;
-	for (int dx = 1; dx <= files_size; dx++)//a loop to process every image in the files
+	for (int dx = 1; dx <= files_size; dx++)//对每张图片进行处理
 	{
 		char input_img_name[128] = { 0 };
 
 		sprintf_s(input_img_name, Resouce_Img_Read_FileLocation"/%d.JPG", dx);
 		cout << input_img_name << endl;
 
-		Mat img_init;//the init image(large and 3 channels)
-		Mat img_gray;//the gray image after by img_resize
-		Mat img_resize;//resized image(samll and 1 channels)
-		Mat img_contrast;// we can increase the contrast radio 
-		Mat img_medianBlur_1st;//two steps'medianBlur
+		Mat img_init;//初始图像集中的图像，彩色三通道
+		Mat img_gray;//经过缩放后再灰度化的图像，单通道
+		Mat img_resize;//缩放后的图像
+		Mat img_contrast;// 可以改变图像的对比度
+		Mat img_medianBlur_1st;//两次中值滤波的第一次
 		Mat img_medianBlur_2nd;
-		Mat img_threshold;//a threshold image
-		Mat img_cross;//image after painting the crossline
+		Mat img_threshold;//二值化图像
+		Mat img_cross;//经过绘制crossline的二值化图像
 		img_init = imread(input_img_name, 1);
 		if (img_init.cols*img_init.rows <= 1000 * 1500)
 			resize(img_init, img_resize, Size(img_init.cols, img_init.rows), 1, 1);
@@ -57,12 +57,12 @@ int main(int argc, char**argv)
 		{
 			double area = contourArea(contours_init[i]);
 			//cout << area << endl;
-			if (area>img_cross.rows*img_cross.cols / 5)// find all contourArea which area is larger than 0.2*image
+			if (area>img_cross.rows*img_cross.cols / 5)// 将所有比整幅图面积的五分之一大的轮廓都筛选出
 				contours_bigger.push_back(contours_init[i]);
 		}
 
 		vector<vector<Point> >hull(contours_bigger.size());
-		for (int i = 0; i < contours_bigger.size(); i++)     //calculate the  hull
+		for (int i = 0; i < contours_bigger.size(); i++)     //凸包计算
 		{
 			convexHull(contours_bigger[i], hull[i]);
 		}
@@ -92,7 +92,7 @@ int main(int argc, char**argv)
 
 
 		/*
-		if (dx == 4)
+		if (dx == 4) //观察单张图片的效果
 		{	
 			Mat img_resize_empty;
 			img_resize.copyTo(img_resize_empty);
@@ -115,8 +115,8 @@ int main(int argc, char**argv)
 		}*/
 
 
-		Point2f src[4];//the four vertexes' point[x,y]
-		Point2f dst[4];//the four points after the PerspectiveTransform 
+		Point2f src[4];//感兴趣区域的四个顶点
+		Point2f dst[4];//经过透视变换后图像的四个顶点，与src相互对应
 		src[0] = cross_point_lu;
 		src[1] = cross_point_ld;
 		src[2] = cross_point_ru;
@@ -130,7 +130,7 @@ int main(int argc, char**argv)
 		dst[3] = Point2f(new_img.cols, new_img.rows);
 		Mat p = getPerspectiveTransform(src, dst);
 		Mat result1, result2;
-		warpPerspective(img_gray, result1, p, new_img.size());//result1 as the output of the interesting area
+		warpPerspective(img_gray, result1, p, new_img.size());//result1 是感兴趣区域的输出
 
 		char output_img_name[128] = { 0 };
 		sprintf_s(output_img_name, Processed_Img_Save_FileLocation"/result%d.jpg", dx);

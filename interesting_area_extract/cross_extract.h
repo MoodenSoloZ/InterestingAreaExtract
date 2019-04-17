@@ -11,9 +11,9 @@ using namespace cv;
 class cross_extract
 {
 public:
-	//extract the cross point between two lines in an image
+	//找出四条直线的在图像内的四个交点
 	Point get_cross_point(int flag, Vec4f line_para1, Vec4f line_para2, double x_max, double y_max);
-	//given four points to find the longest segment consisted by any two points
+	//找出四个交点所围成四边形的最大边长，用于后面做透射变换
 	Mat MaxDistance(Point2f point1, Point2f point2, Point2f point3, Point2f point4);
 private:
 

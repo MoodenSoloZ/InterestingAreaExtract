@@ -25,8 +25,8 @@ Point cross_extract::get_cross_point(int flag, Vec4f line_para1, Vec4f line_para
 			break;
 		dis2 = dis1;
 	}
-	//using flag to make the cross points be more precise, 
-	//considering the situation that the cross points are outside of the input image
+	//flag是为了使得交点找的更准确，由于直线之间的交点可能会在图像之外，遇到这种情况需要把图像外的坐标改回图像内部
+	
 
 	if (flag == 1)
 	{
@@ -81,8 +81,8 @@ Point cross_extract::get_cross_point(int flag, Vec4f line_para1, Vec4f line_para
 		}
 	}
 
-	cout << "横坐标" << cross_point.x << endl;
-	cout << "纵坐标" << cross_point.y << endl;
+	cout << "横坐标" << cross_point.x << endl;//输出交点的横坐标
+	cout << "纵坐标" << cross_point.y << endl;//输出交点的纵坐标
 
 	return cross_point;
 

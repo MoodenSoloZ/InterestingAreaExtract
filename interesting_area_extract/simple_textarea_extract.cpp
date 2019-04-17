@@ -9,26 +9,26 @@ simple_textarea_extract::simple_textarea_extract(Mat img)
 
 Mat simple_textarea_extract::extract_words(Mat input_photo)
 {
-	//1.Sobel算子，x方向求梯度
+	//Sobel算子，x方向求梯度
 	Mat sobel;
 	Sobel(input_photo, sobel, CV_8U, 1, 0, 3);
 	//Mat canny;
 	//Canny(input_photo, canny, 50, 200);
-	//2.二值化
+	//二值化
 	Mat binary;
 	threshold(sobel, binary, 0, 255, THRESH_OTSU + THRESH_BINARY);
 
-	//3.膨胀和腐蚀操作核设定
+	//膨胀和腐蚀操作核设定
 	Mat element1 = getStructuringElement(MORPH_RECT, Size(30, 9));
 	//控制高度设置可以控制上下行的膨胀程度，例如3比4的区分能力更强,但也会造成漏检
 	Mat element2 = getStructuringElement(MORPH_RECT, Size(30, 30));
 	Mat element3 = getStructuringElement(MORPH_RECT, Size(10, 3));
 
-	//4.膨胀一次，让轮廓突出
+	//膨胀一次，让轮廓突出
 	Mat dilate1;
 	dilate(binary, dilate1, element2);
 
-	//5.腐蚀一次，去掉细节，表格线等。这里去掉的是竖直的线
+	//腐蚀一次，去掉细节，表格线等。这里去掉的是竖直的线
 	//Mat erode1;
 	//erode(dilate1, erode1, element1);
 	return dilate1;
@@ -38,12 +38,12 @@ Mat simple_textarea_extract::extract_words(Mat input_photo)
 vector<RotatedRect> simple_textarea_extract::findTextRegion(Mat img)
 {
 	vector<RotatedRect> rects;
-	//1.查找轮廓
+	//轮廓检测
 	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 	findContours(img, contours, hierarchy, RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
 
-	//2.筛选那些面积小的
+	//筛选那些面积小的
 	for (int i = 0; i < contours.size(); i++)
 	{
 		//计算当前轮廓的面积
